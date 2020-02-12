@@ -1,10 +1,10 @@
 const Koa = require("koa");
 const router = require("./router/router");
 const bodyParser = require("koa-body");
-const koaJwt = require("koa-jwt");
+// const koaJwt = require("koa-jwt");
 var app = new Koa();
 app.use(bodyParser());
-app.use(koaJwt());
+// app.use(koaJwt());
 app.use(router.routes());
 app.use(async ctx => {
   console.log("404 Not Found");
