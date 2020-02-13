@@ -9,6 +9,7 @@ app.use(bodyParser());
 // app.use(koaJwt());
 
 app.use(
+  //記得要放係ROUTER前面
   (checkToken = (ctx, next) => {
     return next().catch(err => {
       if (err.status === 401) {
@@ -29,7 +30,7 @@ app.use(
     // 登录接口不需要验证
     path: [/^\/api\/login/, /^\/api\/register/]
   })
-);
-app.use(router.routes());
+); //  解密,,,,要放係後面
+app.use(router.routes()); //放最後
 console.log("项目启动http://127.0.0.1:3000");
 app.listen(3000);
