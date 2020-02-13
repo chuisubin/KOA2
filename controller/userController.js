@@ -1,4 +1,5 @@
 const user = require("../service/user");
+
 async function checkLogin(ctx, next) {
   let { phone, password } = ctx.request.body;
   let data = await user.checkUser(phone, password);
@@ -11,6 +12,9 @@ async function registerUser(ctx, next) {
 }
 async function checkAllUser(ctx, next) {
   let data = await user.checkAll();
+  let token = ctx.header.authorization;
+  console.log("TOKEN IS : ", token);
+
   return (ctx.response.body = data);
 }
 module.exports = { checkLogin, registerUser, checkAllUser };

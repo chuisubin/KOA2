@@ -1,14 +1,29 @@
 const allSqlAction = require("../lib/mysql");
+// const koajwt = require('koa-jwt');
+const jwt = require("jsonwebtoken");
 
 async function checkUser(phone, password) {
-  let sql = `select * from elm_user where elm_userPhone = ${phone} and elm_userPassword=${password}`;
+  let sql = `select * from elm_user where elm_userPhone = ${phone} and elm_userPassword =${password}`;
   return allSqlAction.allSqlAction(sql).then(res => {
     if (
       res.length == 1 &&
       res[0].elm_userPhone === phone &&
-      elm_userPassword === password
+      res[0].elm_userPassword === password
     ) {
-      return { msg: "登陆成功", code: 200 };
+      console.log(res);
+      let userToken = {
+        phone: res[0].elm_userPhone,
+        password: res[0].elm_userPassword
+      };
+      return {
+        msg: "登陆成功",
+        code: 200,
+        token: jwt.sign(
+          userToken, // 加密userToken, 等同于上面解密的userToken
+          "String",
+          { expiresIn: "1h" } // 有效时长1小时
+        )
+      };
     } else {
       return { msg: "登录失败", code: 201 };
     }
@@ -36,6 +51,9 @@ async function registerUser(phone, password) {
 }
 async function checkAll() {
   let sql = `SELECT * FROM elm_user;`;
+
+  // let payload = await util.promisify(jsonwebtoken.verify)(token.split(' ')[1], SECRET);
+
   return allSqlAction.allSqlAction(sql).then(res => {
     if (res.length > 0) {
       console.log("r>0", res);
